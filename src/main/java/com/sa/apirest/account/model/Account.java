@@ -29,9 +29,7 @@ public class Account extends Base{
     private String banco;
     @NotBlank
     private String nombreTitular;
-    
-    private String detail;
-    
+        
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "account_creditcard",
