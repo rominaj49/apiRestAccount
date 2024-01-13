@@ -30,8 +30,8 @@ public class Account extends Base{
     @NotBlank
     private String nombreTitular;
     
-    private String Detail; //eliminar despues
-
+    private String detail;
+    
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "account_creditcard",
