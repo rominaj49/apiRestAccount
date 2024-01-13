@@ -30,7 +30,7 @@ public class Account extends Base{
     @NotBlank
     private String nombreTitular;
     
-    private String Detail;
+    private String Detail; //eliminar despues
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
