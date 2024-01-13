@@ -29,6 +29,8 @@ public class Account extends Base{
     private String banco;
     @NotBlank
     private String nombreTitular;
+    
+    private String Detail;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
