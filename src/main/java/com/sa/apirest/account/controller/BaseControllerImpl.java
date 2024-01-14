@@ -72,6 +72,7 @@ public abstract class BaseControllerImpl <E extends Base, S extends BaseServiceI
         }
     }
 
+    //UPDATE
     @Override
     @PutMapping("/{id}")
      @Operation(
@@ -84,6 +85,7 @@ public abstract class BaseControllerImpl <E extends Base, S extends BaseServiceI
         try {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id, entity));
         }
+
         catch(Exception e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se encontraron registros");
         }
@@ -91,6 +93,7 @@ public abstract class BaseControllerImpl <E extends Base, S extends BaseServiceI
         
     }
 
+    //DELETE
     @Override
     @DeleteMapping("/{id}")
      @Operation(
