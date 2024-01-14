@@ -17,10 +17,14 @@ import java.util.Date;
 @Entity
 @Table(name="creditcard")
 public class CreditCard extends Base {
+
     @NotNull
     private String cardName;
+
     @NotNull
     private String cardNumber;
+
     @NotNull
     private Date cardExpirationDate;
+    
 }

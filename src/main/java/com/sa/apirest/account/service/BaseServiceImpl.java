@@ -8,10 +8,16 @@ import com.sa.apirest.account.interfaces.BaseService;
 import com.sa.apirest.account.model.Account;
 import com.sa.apirest.account.model.Base;
 import com.sa.apirest.account.repository.BaseRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import org.apache.coyote.BadRequestException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> implements BaseService <E,ID>{
@@ -36,34 +42,40 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
     @Override
     public E findById(ID id) throws Exception {
         
-        try {
+        try {        
+            Optional<E> entityOptional = baseRepository.findById(id); //busco el id
             
-            Optional<E> entityOptional = baseRepository.findById(id);
-            return entityOptional.get();
-        
+            //VALIDACIÓN SI ES NULO
+            if (!entityOptional.isPresent()) {
+                throw new EntityNotFoundException("No existe registro con el id: " + id);
+            }  
+            
+            return entityOptional.get();     //si sigue corriendo el programa devuelve EL REG        
         }
         
-        catch(Exception e){
-        throw new Exception (e.getMessage());
+        catch(EntityNotFoundException e){   //aca captura la excedption y la envia al controlador
+            throw e;
         }
         
-        
+        catch(Exception e){                 //error de otro tipo
+         throw new Exception (e.getMessage());
+        }         
     }
+    
     
     @Transactional
     @Override
     public E save(E entity) throws Exception {
         
-        try {
-            
+        try {          
          entity=baseRepository.save(entity);
-         return entity;
-        
+         return entity;       
        }
         
-        catch (Exception e){
-        
-       throw new Exception (e.getMessage());
+        catch(DataIntegrityViolationException e){
+        throw new DataIntegrityViolationException(e.getMessage());
+        }catch (Exception e){      
+        throw new Exception (e.getMessage());
         }
         
         
@@ -74,39 +86,42 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
         
         try {
             Optional<E> entityOptional = baseRepository.findById(id);
+            if (!entityOptional.isPresent()) {
+                throw new EntityNotFoundException("No existe registro con el id: " + id); //404
+            }
+            if(id!=entity.getId()){
+                throw new BadRequestException(""); // BAD REQUEST 400
+            }           
             E appo = entityOptional.get();
             appo = baseRepository.save(entity);
             return appo;
             
-        }
-        
-        catch (Exception e){
+        }catch(BadRequestException e){
+            throw e;
+        }catch(EntityNotFoundException e){
+            throw e;
+        }catch (Exception e){
         throw new Exception (e.getMessage());
         }
-        
-        
+          
     }
     
     @Transactional
     @Override
     public boolean delete(ID id) throws Exception {
-        try {
-            if(baseRepository.existsById(id)){
-            baseRepository.deleteById(id);
-            return true;
-            
+         try {
+            if (baseRepository.existsById(id)) {
+                baseRepository.deleteById(id);
+                return true;
+            } else {
+                throw new EntityNotFoundException();
             }
-            else {
-            
-            return false;
-            }
+           
+        }catch(EntityNotFoundException e){
+           throw e ;
+           
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
-        catch (Exception e){
-                throw new Exception (e.getMessage());
-                }
     }
-    
-    
-
-    
 }

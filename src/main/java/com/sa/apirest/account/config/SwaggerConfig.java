@@ -25,10 +25,28 @@ public class SwaggerConfig {
                     new io.swagger.v3.oas.models.media.MediaType().addExamples("default",
                             new Example().value("{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" : \"Traido con exito!\"}")))
         );
+         ApiResponse notFound = new ApiResponse().content(
+            new Content().addMediaType(MediaType.APPLICATION_JSON_VALUE, 
+                    new io.swagger.v3.oas.models.media.MediaType().addExamples("default",
+                            new Example().value("{\"code\" : 404, \"Status\" : \"NOT_FOUND\", \"Message\" : \"No se encontro el registro\"}")))
+        );
+          ApiResponse badRequest = new ApiResponse().content(
+            new Content().addMediaType(MediaType.APPLICATION_JSON_VALUE, 
+                    new io.swagger.v3.oas.models.media.MediaType().addExamples("default",
+                            new Example().value("{\"code\" : 400, \"Status\" : \"BAD_REQUEST\", \"Message\" : \"Solicitud invalida\"}")))
+        );
+         ApiResponse internalServerError = new ApiResponse().content(
+            new Content().addMediaType(MediaType.APPLICATION_JSON_VALUE, 
+                    new io.swagger.v3.oas.models.media.MediaType().addExamples("default",
+                            new Example().value("{\"code\" : 500, \"Status\" : \"INTERNAL_SERVER_ERROR\", \"Message\" : \"Error interno\"}")))
+        );        
         
         Components components = new Components();
         components.addResponses("okAPI", okAPI);
-        
+        components.addResponses("notFound", notFound);
+        components.addResponses("internalServerError", internalServerError);
+        components.addResponses("badRequest", badRequest);
+
         
         return new OpenAPI()
                             .components(components)
