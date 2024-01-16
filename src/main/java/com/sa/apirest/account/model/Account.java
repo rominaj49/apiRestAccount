@@ -24,15 +24,12 @@ import java.util.List;
 @Table(name = "account")
 public class Account extends Base{
     
-    @NotNull
+    @NotNull(message = "El CBU no puede ser nulo")
     private String cbu;
-    
-    @NotBlank
-    @Size(min=1, max= 50, message="No cumple con la longitud")
+    @NotBlank(message = "El banco no puede estar en blanco")
+    @NotNull(message = "El banco no puede estar en null")
     private String banco;
-    
-    @NotBlank
-    @Size(min=1, max= 50, message="No cumple con la longitud")
+    @NotNull(message = "El nombre del titular no puede estar en blanco")
     private String nombreTitular;
         
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

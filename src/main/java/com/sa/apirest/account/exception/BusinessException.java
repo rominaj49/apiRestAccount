@@ -1,4 +1,4 @@
-package exception;
+package com.sa.apirest.account.exception;
 
 import lombok.Getter;
 import lombok.Setter;

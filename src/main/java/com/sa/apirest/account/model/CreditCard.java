@@ -18,13 +18,13 @@ import java.util.Date;
 @Table(name="creditcard")
 public class CreditCard extends Base {
 
-    @NotNull
+    @NotNull(message = "cardName no puede ser nulo")
     private String cardName;
 
-    @NotNull
+    @NotNull(message = "cadNumber no puede ser nulo")
     private String cardNumber;
 
-    @NotNull
+    @NotNull(message = "cardExpiration no puede ser nulo")
     private Date cardExpirationDate;
     
 }

@@ -51,7 +51,8 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
             }  
             
             return entityOptional.get();     //si sigue corriendo el programa devuelve EL REG        
-        }
+        } 
+        
         
         catch(EntityNotFoundException e){   //aca captura la excedption y la envia al controlador
             throw e;
@@ -74,12 +75,15 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
         
         catch(DataIntegrityViolationException e){
         throw new DataIntegrityViolationException(e.getMessage());
-        }catch (Exception e){      
+        }
+        
+         catch (Exception e){      
         throw new Exception (e.getMessage());
         }
         
         
     }
+    
     @Transactional
     @Override
     public E update(ID id, E entity) throws Exception {
@@ -87,10 +91,10 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
         try {
             Optional<E> entityOptional = baseRepository.findById(id);
             if (!entityOptional.isPresent()) {
-                throw new EntityNotFoundException("No existe registro con el id: " + id); //404
+                throw new EntityNotFoundException("No existe registro con el id: " + id); // ERROR 404
             }
             if(id!=entity.getId()){
-                throw new BadRequestException(""); // BAD REQUEST 400
+                throw new BadRequestException("No coinciden los ids existentes."); // COMPARA ID DE LA BUSQ CON EL DEL BODY --> BAD REQUEST 400
             }           
             E appo = entityOptional.get();
             appo = baseRepository.save(entity);
@@ -100,7 +104,7 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
             throw e;
         }catch(EntityNotFoundException e){
             throw e;
-        }catch (Exception e){
+        }catch (Exception e){ // 
         throw new Exception (e.getMessage());
         }
           
@@ -109,18 +113,19 @@ public abstract class BaseServiceImpl <E extends Base, ID extends Serializable> 
     @Transactional
     @Override
     public boolean delete(ID id) throws Exception {
-         try {
-            if (baseRepository.existsById(id)) {
-                baseRepository.deleteById(id);
-                return true;
-            } else {
-                throw new EntityNotFoundException();
+        try {
+          if (baseRepository.existsById(id)) 
+           {
+              baseRepository.deleteById(id);
+              return true;
+            }           
+          else {
+              throw new EntityNotFoundException("No existe registro con el id: " + id);
             }
-           
-        }catch(EntityNotFoundException e){
+          }catch(EntityNotFoundException e){
            throw e ;
            
-        }catch (Exception e) {
+          }catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
